@@ -24,7 +24,7 @@ export const products = pgTable("products", {
 });
 
 export const comments = pgTable("comments", {
-    id:uuid("").defaultRandom().primaryKey(),
+    id:uuid("id").defaultRandom().primaryKey(),
     content: text("content").notNull(),
     userId: text("user_id")
     .notNull()
