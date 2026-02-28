@@ -6,10 +6,14 @@ export const syncUser = async (userData) => {
     return data;
 };
 
-// products
-export const getProducts = async () => {
+// ✅ always return an array regardless of API response shape
+export const getAllProducts = async () => {
     const { data } = await api.get('/products');
-    return data;
+    // handle { products: [...] }, { data: [...] }, or plain array
+    if (Array.isArray(data)) return data;
+    if (Array.isArray(data?.products)) return data.products;
+    if (Array.isArray(data?.data)) return data.data;
+    return [];
 };
 
 export const getProductById = async (id) => {
@@ -19,7 +23,9 @@ export const getProductById = async (id) => {
 
 export const getMyProducts = async () => {
     const { data } = await api.get('/products/my');
-    return data;
+    if (Array.isArray(data)) return data;
+    if (Array.isArray(data?.products)) return data.products;
+    return [];
 };
 
 export const createProduct = async (productData) => {

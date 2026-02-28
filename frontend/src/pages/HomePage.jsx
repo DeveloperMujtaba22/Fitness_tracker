@@ -1,18 +1,27 @@
 import { useProducts } from "../hook/useProducts";
 import { PackageIcon, SparklesIcon, ZapIcon, HeartIcon, TrendingUpIcon } from "lucide-react";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import LoadingSpinner from "../components/LoadingSpinner";
 import ProductCard from "../components/ProductCard";
-import { SignInButton } from "@clerk/clerk-react";
+import { SignInButton, useAuth } from "@clerk/clerk-react";
 
 const stats = [
-  { icon: HeartIcon,     label: "Active Users",    value: "12K+" },
-  { icon: ZapIcon,       label: "Workouts Logged",  value: "98K+" },
-  { icon: TrendingUpIcon,label: "Goals Reached",    value: "5K+"  },
+  { icon: HeartIcon,      label: "Active Users",   value: "12K+" },
+  { icon: ZapIcon,        label: "Workouts Logged", value: "98K+" },
+  { icon: TrendingUpIcon, label: "Goals Reached",   value: "5K+"  },
 ];
 
 function HomePage() {
-  const { data: products, isLoading, error } = useProducts();
+  const { data, isLoading, error } = useProducts();
+  const { isSignedIn } = useAuth();
+  const navigate = useNavigate();
+
+  // ✅ normalise whatever shape the API returns into a plain array
+  const products = Array.isArray(data)
+    ? data
+    : Array.isArray(data?.products)
+    ? data.products
+    : [];
 
   if (isLoading) return <LoadingSpinner />;
 
@@ -32,13 +41,11 @@ function HomePage() {
 
           {/* LEFT: Text */}
           <div className="text-center lg:text-left flex-1 space-y-5 pb-4">
-            {/* pill badge */}
             <span className="inline-flex items-center gap-1.5 bg-primary/10 text-primary text-xs font-semibold px-3 py-1 rounded-full border border-primary/20">
               <ZapIcon className="size-3" />
               #1 Fitness Marketplace
             </span>
 
-            {/* headline */}
             <h1 className="text-4xl lg:text-5xl font-extrabold leading-tight tracking-tight">
               Track. Train.{" "}
               <span className="text-primary relative">
@@ -58,23 +65,26 @@ function HomePage() {
               products — all in one place. Built for athletes who never quit.
             </p>
 
-            {/* CTAs */}
             <div className="flex flex-wrap gap-3 justify-center lg:justify-start">
-            <Link to="/create">
-                        <SignInButton mode="modal">
-                <button className="btn btn-primary gap-2">
+              {isSignedIn ? (
+                <button onClick={() => navigate("/create")} className="btn btn-primary gap-2">
                   <SparklesIcon className="size-4" />
                   Start Selling
                 </button>
-              </SignInButton>
-             
-            </Link>             <Link to="/products" className="btn btn-outline gap-2">
+              ) : (
+                <SignInButton mode="modal">
+                  <button className="btn btn-primary gap-2">
+                    <SparklesIcon className="size-4" />
+                    Start Selling
+                  </button>
+                </SignInButton>
+              )}
+              <Link to="/" className="btn btn-outline gap-2">
                 <PackageIcon className="size-4" />
                 Browse Products
               </Link>
             </div>
 
-            {/* stats */}
             <div className="flex flex-wrap gap-6 justify-center lg:justify-start pt-2">
               {stats.map(({ icon: Icon, label, value }) => (
                 <div key={label} className="flex items-center gap-2">
@@ -90,21 +100,15 @@ function HomePage() {
             </div>
           </div>
 
-          {/* RIGHT: Floating character — NO background box */}
+          {/* RIGHT: Floating character */}
           <div className="relative flex-1 flex justify-center items-end self-end">
-
-            {/* soft glow behind character */}
             <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-72 h-72 bg-primary/15 blur-3xl rounded-full" />
-
-            {/* character PNG — transparent BG, bleeds to bottom edge */}
             <img
               src="/image.png"
               alt="Fitness Trainer"
               className="relative z-10 h-72 lg:h-89 object-contain drop-shadow-2xl"
-              style={{ marginBottom: "-2.5rem" }} /* bleeds slightly below hero edge */
+              style={{ marginBottom: "-2.5rem" }}
             />
-
-            {/* floating heart rate badge */}
           </div>
 
         </div>
