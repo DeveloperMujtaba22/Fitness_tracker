@@ -16,7 +16,6 @@ function HomePage() {
   const { isSignedIn } = useAuth();
   const navigate = useNavigate();
 
-  // ✅ normalise whatever shape the API returns into a plain array
   const products = Array.isArray(data)
     ? data
     : Array.isArray(data?.products)
@@ -100,8 +99,8 @@ function HomePage() {
             </div>
           </div>
 
-          {/* RIGHT: Floating character */}
-          <div className="relative flex-1 flex justify-center items-end self-end">
+          {/* RIGHT: Floating character — hidden on mobile, visible on lg+ */}
+          <div className="hidden lg:flex relative flex-1 justify-center items-end self-end">
             <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-72 h-72 bg-primary/15 blur-3xl rounded-full" />
             <img
               src="/image.png"

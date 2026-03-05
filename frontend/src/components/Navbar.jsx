@@ -1,7 +1,6 @@
-// frontend/src/components/Navbar.jsx
 import { Link } from "react-router";
 import { SignInButton, SignUpButton, UserButton, useAuth } from "@clerk/clerk-react";
-import { PlusIcon, UserIcon, Sparkles, Boxes } from "lucide-react";
+import { PlusIcon, UserIcon, Sparkles } from "lucide-react";
 
 function Navbar() {
     const { isSignedIn } = useAuth();
@@ -13,20 +12,13 @@ function Navbar() {
 
             <div className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between gap-4">
 
-                {/* LOGO */}
-                <Link to="/" className="flex items-center gap-3 group">
-                    {/* Icon box */}
-                   
-
-                    {/* Logo image + label */}
-                    <div className="hidden sm:flex flex-col leading-none gap-0.5">
-                       <img
-    src="./logo.png"
-    alt="Productify Logo"
-    className="h-18 w-auto object-contain"
-/>
-                       
-                    </div>
+                {/* LOGO — always visible on all screen sizes */}
+                <Link to="/" className="flex items-center gap-2 group">
+                    <img
+                        src="/logo1.png"
+                        alt="Productify Logo"
+                        className="h-30 w-auto object-contain"
+                    />
                 </Link>
 
                 {/* RIGHT SIDE */}
@@ -70,7 +62,8 @@ function Navbar() {
                             <SignUpButton mode="modal">
                                 <button className="btn btn-sm gap-1.5 bg-emerald-500 hover:bg-emerald-400 border-none text-white font-semibold shadow-md shadow-emerald-700/40">
                                     <Sparkles className="size-3.5" />
-                                    Get Started
+                                    <span className="hidden sm:inline">Get Started</span>
+                                    <span className="sm:hidden">Join</span>
                                 </button>
                             </SignUpButton>
                         </div>
