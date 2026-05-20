@@ -1,10 +1,5 @@
 {
-  "experimentalServices": {
-    "frontend": {
-      "entrypoint": "frontend"
-    },
-    "backend": {
-      "entrypoint": "_/backend"
-    }
-  }
+  "outputDirectory": "dist",
+  "buildCommand": "cd frontend && npm install && npm run build",
+  "installCommand": "cd frontend && npm install"
 }
