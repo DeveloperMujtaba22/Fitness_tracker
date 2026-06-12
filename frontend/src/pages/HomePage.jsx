@@ -24,13 +24,13 @@ function HomePage() {
 
   if (isLoading) return <LoadingSpinner />;
 
-  if (error) {
-    return (
-      <div role="alert" className="alert alert-error">
-        <span>Something went wrong. Please refresh the page.</span>
-      </div>
-    );
-  }
+if (error) {
+  return (
+    <div role="alert" className="alert alert-error">
+      <span>Something went wrong: {error?.message}</span>
+    </div>
+  );
+}
 
   return (
     <div className="space-y-10">

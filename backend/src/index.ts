@@ -34,6 +34,6 @@ app.use("/api/users" , userRoutes)
 app.use("/api/products", productRoutes)
 app.use("/api/comments", commentRoutes)
 
-// app.listen(ENV.PORT, () => console.log("Server is up and running on PORT:" ,ENV.PORT) )
+app.listen(ENV.PORT, () => console.log("Server is up and running on PORT:" ,ENV.PORT) )
 
 export default app;
