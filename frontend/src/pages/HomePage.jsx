@@ -1,5 +1,8 @@
+import { useProducts } from "../hook/useProducts";
 import { PackageIcon, SparklesIcon, ZapIcon, HeartIcon, TrendingUpIcon } from "lucide-react";
 import { Link, useNavigate } from "react-router";
+import LoadingSpinner from "../components/LoadingSpinner";
+import ProductCard from "../components/ProductCard";
 import { SignInButton, useAuth } from "@clerk/clerk-react";
 
 const stats = [
@@ -11,6 +14,15 @@ const stats = [
 function HomePage() {
   const { isSignedIn } = useAuth();
   const navigate = useNavigate();
+
+  // Only fetch products when the user is signed in
+  const { data, isLoading, error } = useProducts({ enabled: isSignedIn });
+
+  const products = Array.isArray(data)
+    ? data
+    : Array.isArray(data?.products)
+    ? data.products
+    : [];
 
   return (
     <div className="space-y-10">
@@ -91,6 +103,50 @@ function HomePage() {
           </div>
 
         </div>
+      </div>
+
+      {/* ── PRODUCTS (sign-in gated) ── */}
+      <div>
+        <h2 className="text-xl font-bold flex items-center gap-2 mb-4">
+          <PackageIcon className="size-5 text-primary" />
+          All Products
+        </h2>
+
+        {!isSignedIn ? (
+          <div className="card bg-base-300">
+            <div className="card-body items-center text-center py-16">
+              <PackageIcon className="size-16 text-base-content/20" />
+              <h3 className="card-title text-base-content/50">No products available</h3>
+              <p className="text-base-content/40 text-sm">Sign in to view all products.</p>
+              <SignInButton mode="modal">
+                <button className="btn btn-primary btn-sm mt-2">Sign In</button>
+              </SignInButton>
+            </div>
+          </div>
+        ) : isLoading ? (
+          <LoadingSpinner />
+        ) : error ? (
+          <div role="alert" className="alert alert-error">
+            <span>Something went wrong: {error?.message}</span>
+          </div>
+        ) : products.length === 0 ? (
+          <div className="card bg-base-300">
+            <div className="card-body items-center text-center py-16">
+              <PackageIcon className="size-16 text-base-content/20" />
+              <h3 className="card-title text-base-content/50">No products yet</h3>
+              <p className="text-base-content/40 text-sm">Be the first to share something!</p>
+              <Link to="/create" className="btn btn-primary btn-sm mt-2">
+                Create Product
+              </Link>
+            </div>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {products.map((product) => (
+              <ProductCard key={product.id} product={product} />
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );
